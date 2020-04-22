@@ -25,9 +25,9 @@ class BlogsController < ApplicationController
   # POST /blogs.json
   def create
     @blog = Blog.new(blog_params)
-
     respond_to do |format|
       if @blog.save
+        ContentCleanupService.new(@blog).call #ContentCleanupServiceをコールする
         format.html { redirect_to @blog, notice: 'Blog was successfully created.' }
         format.json { render :show, status: :created, location: @blog }
       else
@@ -42,6 +42,7 @@ class BlogsController < ApplicationController
   def update
     respond_to do |format|
       if @blog.update(blog_params)
+        ContentCleanupService.new(@blog).call
         format.html { redirect_to @blog, notice: 'Blog was successfully updated.' }
         format.json { render :show, status: :ok, location: @blog }
       else
